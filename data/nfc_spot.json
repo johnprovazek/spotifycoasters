@@ -1,0 +1,8 @@
+{
+    "0415914a403916": { "context_uri": "spotify:album:0pquf1NcG9FdiypBPwICu9"},
+    "0415918aefd615": { "context_uri": "spotify:album:3THuBNp86ScbTXwpTmAbdw", "offset": { "position": 7 }, "position_ms": 296200},
+    "0415918abbf315": { "context_uri": "spotify:playlist:6GbQis3GgcPUkFmjnrFfUX"},
+    "0415919af80415": { "context_uri": "spotify:playlist:5ZYEAB4m4UxQCFUloDY9u8", "offset": {"uri": "spotify:track:6aBUnkXuCEQQHAlTokv9or"}},
+    "0415919aa35915": { "context_uri": "spotify:show:7nl7iKCcIM32kD1fMvI9eF", "offset": {"uri": "spotify:episode:6L0UDoFKuUMP0Mmn9l7jIT"}},
+    "04fb9989700000": { "context_uri": "spotify:artist:1wg0T50ugsycU3EyXm38ib"}
+}
