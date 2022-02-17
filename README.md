@@ -45,7 +45,7 @@ This guide is for setting up NFC embedded coasters that will play albums and pla
 
 ### Coaster Setup
 - If you decided to use coasters for this project here is the [youtube](https://www.youtube.com/watch?v=RV7-3CawKAM&t=68s&ab_channel=DIYPETE) tutorial I followed.
-- In his tutorial he used felt pads on the bottom, I opted for a [cork backing](https://www.amazon.com/gp/product/B0834MWWS8/). There is probably a better way to do this, but I used an X-acto knife to cut away a small cavity for the NFC tag to sit. I then hot glued the cork backing to the coaster such that you couldn't see it.
+- In his tutorial he used felt pads on the bottom, I opted for a [cork backing](https://www.amazon.com/gp/product/B0834MWWS8/). There is probably a better way to do this, but I used an X-acto knife to cut away a small cavity for the NFC tag to sit. I then hot glued the cork backing to the coaster such that you couldn't see the NFC tag.
 - I also printed out my album covers and playlist covers at Walmart as 4x6 prints. I included a Python script **convert_album_cover.py** to help convert square images to fit in 4x6 prints assuming you are using 4 inch tiles. First crop all your images so they are squares then put all images in the [albumart/originalcover](./albumart/originalcover) directory. Run the **convert_album_cover.py** script and the 4x6 formatted prints will be put in the [albumart/4x6prints](./albumart/4x6prints) directory.
 
 ## Usage
