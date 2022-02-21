@@ -68,6 +68,11 @@ This guide is for setting up NFC embedded coasters that will play albums and pla
 
 [Python Automation project : Run Python scripts Automatically in backgroud on windows startup - Code Bear](https://www.youtube.com/watch?v=XWV9tatoPQI&ab_channel=CodeBear) was helpful in understanding how to run this script on startup.
 
+## Bugs & Features
+
+- Fix script breaking when computer sleeps or usb is unplugged while running in background on startup.
+- Add local server in the setup scripts to make setup easier.
+- Add a feature for a shuffle NFC tag.
 
 ## License
 
