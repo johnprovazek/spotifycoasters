@@ -1,4 +1,5 @@
-import json # For parsing secrets.json file
+import json
+from random import shuffle # For parsing secrets.json file
 import requests # For sending Spotify API requests
 import nfc # For reading NFC tags
 import subprocess  # For opening Spotify.exe and checking if it is open
@@ -18,14 +19,23 @@ class SpotifyCoasters:
         self.device_id = secrets_json["DEVICEID"]
 
     def play(self,tag):
-        self.launch_desktop_spotify()
+        query = "https://api.spotify.com/v1/me/player"
+        response = requests.get(query,
+                headers={"Content-Type": "application/json",
+                    "Authorization": "Bearer {}".format(self.access_token)})
+        response_json = response.json()
         data = nfc_spot_json[tag.identifier.hex()]
+        if response_json["shuffle_state"]:
+            data ={'context_uri':data["context_uri"]}
+            print(data)
+        self.launch_desktop_spotify()
         print("Sending request to play Spotify content")
         query = "https://api.spotify.com/v1/me/player/play?device_id=" + self.device_id
         response = requests.put(query, data = json.dumps(data),
             headers={"Content-Type": "application/json",
                 "Authorization": "Bearer {}".format(self.access_token)})
         self.print_context(tag)
+        # print(response)
 
     def refresh_access_token(self):
         print("Refreshing Spotify token")
@@ -93,10 +103,23 @@ class SpotifyCoasters:
         else:
             print("Error: Spotify Content was incorrectly setup in your nfc_spot.json file. In your context_uri you should have album, playlist, show, or artist")
 
+    def set_shuffle(self, state):
+        query = "https://api.spotify.com/v1/me/player/shuffle?state=" + state + "&device_id=" + self.device_id
+        response = requests.put(query,
+                headers={"Content-Type": "application/json",
+                    "Authorization": "Bearer {}".format(self.access_token)})
+
     def nfc_reader_on_tag_connect(self, tag):
         print("\nTag Connected: " + tag.identifier.hex())
         if tag.identifier.hex() in nfc_spot_json:
-            self.play(tag)
+            if nfc_spot_json[tag.identifier.hex()] == "shuffle":
+                print("Turning on Shuffle")
+                self.set_shuffle("true")
+            elif nfc_spot_json[tag.identifier.hex()] == "sequential":
+                print("Turning off Shuffle")
+                self.set_shuffle("false")
+            else:
+                self.play(tag)
         else:
             print("The Tag: " + tag.identifier.hex() + " is not listed in nfc_spot.json")
         return True
@@ -118,15 +141,18 @@ class SpotifyCoasters:
 # os.chdir("C:\\Users\\John\\Documents\\spotifycoasters")
 
 # Load the NFC tag and Spotify request data json file
-nfc_spot_file = open('./data/nfc_spot.json')
+nfc_spot_file = open('./john/nfc_spot.json')
 nfc_spot_json = json.load(nfc_spot_file)
 
 # Load the secrets json file
-secrets_file = open('./data/secrets.json')
+secrets_file = open('./john/secrets.json')
 secrets_json = json.load(secrets_file)
 
 # Initilize the Spotify Coaster project app
 a = SpotifyCoasters()
+
+# Refresh token. This is needed incase coaster is on NFC Reader on startup.
+a.refresh_access_token()
 
 # Start up the NFC reader loop in own thread
 a.nfc_run_thread()
@@ -139,3 +165,4 @@ while True:
     except KeyboardInterrupt:
         print("\nCtrl + C registered")
         sys.exit()
+

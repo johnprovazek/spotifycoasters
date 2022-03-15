@@ -4,7 +4,7 @@
 This project was originally concieved as a much different idea. This idea came about because I have a large collection of CD's. I keep most of them in my car which means I have a big box of CD cases at home taking up space. The original idea was to mount these CD cases on a wall. When the CD's would be pressed a switch behind them would be activated and the album would be played. At the same time I also wanted to do something similar with my Spotify playlists. I wanted to build custom cartridges that when read would play my Spotify playlists. At the time, I was also looking to buy some coasters and decided this would be a great project to combine all these ideas. I decided to make NFC embedded coasters that when read by a NFC reader would play my favorite albums and playlists on Spotify!
 
 ## Installation
-This guide is for setting up NFC embedded coasters that will play albums and playlists on Spotify when read by a NFC reader. This is written in Python making use of the [nfcpy](https://nfcpy.readthedocs.io/en/latest/) package. In the [nfcpy](https://nfcpy.readthedocs.io/en/latest/) package documentation they require Python version 2.7 or 3.5 or newer. In  my implementation I am using Python version 3.9.6 and running this on a Windows 10 machine. The two minimum items you need to purchase to make use of this project are a NFC reader and NFC tags. The NFC reader I used was the [Sony RC-S380](https://www.amazon.com/gp/product/B00VR1WARC) NFC reader. The NFC tags I used were [NTAG215 tags](https://www.amazon.com/gp/product/B08G8KQLLB). You could use a different NFC reader and different tags, but before doing so thoroughly research in the [nfcpy](https://nfcpy.readthedocs.io/en/latest/overview.html#supported-devices) documentation to make sure the devices and tags are compatible. You may need to make adjustments to my code to get any different readers or tags than the ones I used to work.
+This guide is for setting up NFC embedded coasters that will play albums and playlists on Spotify when read by a NFC reader. This is written in Python making use of the [nfcpy](https://nfcpy.readthedocs.io/en/latest/) package. In the [nfcpy](https://nfcpy.readthedocs.io/en/latest/) package documentation they require Python version 2.7 or 3.5 or newer. In  my implementation I am using Python version 3.9.6 and running this on a Windows 10 machine. The two minimum items you need to purchase to make use of this project are a NFC reader and NFC tags. The NFC reader I used was the [Sony RC-S380](https://www.amazon.com/gp/product/B00VR1WARC) NFC reader. The NFC tags I used were [NTAG215 tags](https://www.amazon.com/gp/product/B08G8KQLLB). You could use a different NFC reader and different tags, but before doing so thoroughly research in the [nfcpy](https://nfcpy.readthedocs.io/en/latest/overview.html#supported-devices) documentation to make sure the devices and tags are compatible. You also may need to make adjustments to my code if you went with a different reader or different tags.
 
 ### Application Setup
 - Open the file [secrets.json](./data/secrets.json) to enter values during this authentication process.
@@ -34,10 +34,13 @@ This guide is for setting up NFC embedded coasters that will play albums and pla
         "0415918abbf315": { "context_uri": "spotify:playlist:6GbQis3GgcPUkFmjnrFfUX"},
         "0415919af80415": { "context_uri": "spotify:playlist:5ZYEAB4m4UxQCFUloDY9u8", "offset": {"uri": "spotify:track:6aBUnkXuCEQQHAlTokv9or"}},
         "0415919aa35915": { "context_uri": "spotify:show:7nl7iKCcIM32kD1fMvI9eF", "offset": {"uri": "spotify:episode:6L0UDoFKuUMP0Mmn9l7jIT"}},
-        "04fb9989700000": { "context_uri": "spotify:artist:1wg0T50ugsycU3EyXm38ib"}
+        "04fb9989700000": { "context_uri": "spotify:artist:1wg0T50ugsycU3EyXm38ib"},
+        "049f9a2b700000": "shuffle",
+        "0451bd2b700000": "sequential"
     }
     ```
 - The first section is a 14 character code unique to one NFC tag. The second section is the request body sent to the Spotify API [Start/Resume Playback endpoint](https://developer.spotify.com/console/put-play/).
+- This script is also setup for two special NFC tag mappings. You can map NFC tags to either the strings "shuffle" or "sequential". If these NFC tags are read they will enable or disable the shuffle feature on Spotify.
 - To gather the codes in your NFC tags first start by plugging in your NFC Reader. Run the Python script **nfc_reader.py**. This is a simple script to read in NFC tags and output the code associated with each tag. Copy the output and add it to [nfc_spot.json](./data/nfc_spot.json).
 - To create the corresponding Spotify section start by opening Spotify. Under playlists, albums, songs, artists, shows, and episodes there will be an ellipses. Click on that ellipses and select share and copy link. In the link there will be a section indicating whether it is a playlist, album, song, artist, show, or episode. Following that there is a 22 character code. You will use that media type and code to form a context_uri. For example when I share the 1992 album Facing Future by Israel Kamakawiwo'ole the Spotify share link will look like: "https://open.spotify.com/album/0pquf1NcG9FdiypBPwICu9?si=jgPtKX9RSxWQi437n3rj7g". When I format that link into a context_uri it will look like "spotify:album:0pquf1NcG9FdiypBPwICu9". You can then add that context_uri to correspond with an NFC tag in [nfc_spot.json](./data/nfc_spot.json). Follow the format in the [nfc_spot.json](./data/nfc_spot.json) example above.
 - If you are like me and are doing this for many albums and playlists I have a Python script **link_uri_conversion.py** to help. First put all the Spotify share links in the file [spotify_links.txt](./data/spotify_links.txt). Then run the script to convert all the links to the context_uri format.
@@ -72,7 +75,6 @@ This guide is for setting up NFC embedded coasters that will play albums and pla
 
 - Fix script breaking when computer sleeps or usb is unplugged while running in background on startup.
 - Add local server in the setup scripts to make setup easier.
-- Add a feature for a shuffle NFC tag.
 
 ## License
 

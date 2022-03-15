@@ -4,5 +4,7 @@
     "0415918abbf315": { "context_uri": "spotify:playlist:6GbQis3GgcPUkFmjnrFfUX"},
     "0415919af80415": { "context_uri": "spotify:playlist:5ZYEAB4m4UxQCFUloDY9u8", "offset": {"uri": "spotify:track:6aBUnkXuCEQQHAlTokv9or"}},
     "0415919aa35915": { "context_uri": "spotify:show:7nl7iKCcIM32kD1fMvI9eF", "offset": {"uri": "spotify:episode:6L0UDoFKuUMP0Mmn9l7jIT"}},
-    "04fb9989700000": { "context_uri": "spotify:artist:1wg0T50ugsycU3EyXm38ib"}
+    "04fb9989700000": { "context_uri": "spotify:artist:1wg0T50ugsycU3EyXm38ib"},
+    "049f9a2b700000": "shuffle",
+    "0451bd2b700000": "sequential"
 }
