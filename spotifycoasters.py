@@ -15,7 +15,6 @@ class SpotifyCoasters:
         self.base_64 = secrets_json["BASE64IDSECRET"]
         self.access_token = ""
         self.refresh_token = secrets_json["REFRESHTOKEN"]
-        self.device_name = secrets_json["DEVICENAME"]
         self.device_id = secrets_json["DEVICEID"]
 
     def play(self,tag):
@@ -141,11 +140,11 @@ class SpotifyCoasters:
 # os.chdir("C:\\Users\\John\\Documents\\spotifycoasters")
 
 # Load the NFC tag and Spotify request data json file
-nfc_spot_file = open('./john/nfc_spot.json')
+nfc_spot_file = open('./data/nfc_spot.json')
 nfc_spot_json = json.load(nfc_spot_file)
 
 # Load the secrets json file
-secrets_file = open('./john/secrets.json')
+secrets_file = open('./data/secrets.json')
 secrets_json = json.load(secrets_file)
 
 # Initilize the Spotify Coaster project app

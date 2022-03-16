@@ -1,31 +1,48 @@
 # spotifycoasters
 
 ## Description
-This project was originally concieved as a much different idea. This idea came about because I have a large collection of CD's. I keep most of them in my car which means I have a big box of CD cases at home taking up space. The original idea was to mount these CD cases on a wall. When the CD's would be pressed a switch behind them would be activated and the album would be played. At the same time I also wanted to do something similar with my Spotify playlists. I wanted to build custom cartridges that when read would play my Spotify playlists. At the time, I was also looking to buy some coasters and decided this would be a great project to combine all these ideas. I decided to make NFC embedded coasters that when read by a NFC reader would play my favorite albums and playlists on Spotify!
+This project was originally concieved as a much different idea. This idea came about because I have a large collection of CD's. I keep most of them in my car which means I have a big box of CD cases at home taking up space. The original idea was to mount these CD cases on a wall. When the CD's would be pressed a switch behind them would be activated and the album would be played. At the same time I also wanted to do something similar with my Spotify playlists. I wanted to build custom cartridges that when read would play my Spotify playlists. At the time, I was also looking to buy some coasters. I decided this would be a great project to combine all of these ideas. I decided to make NFC embedded coasters that when read by a NFC reader would play my favorite albums and playlists on Spotify!
 
 Built using Python utilizing the Spotify API.
 
 ## Installation
-This guide is for setting up NFC embedded coasters that will play albums and playlists on Spotify when read by a NFC reader. This is written in Python making use of the [nfcpy](https://nfcpy.readthedocs.io/en/latest/) package. In the [nfcpy](https://nfcpy.readthedocs.io/en/latest/) package documentation they require Python version 2.7 or 3.5 or newer. In  my implementation I am using Python version 3.9.6 and running this on a Windows 10 machine. The two minimum items you need to purchase to make use of this project are a NFC reader and NFC tags. The NFC reader I used was the [Sony RC-S380](https://www.amazon.com/gp/product/B00VR1WARC) NFC reader. The NFC tags I used were [NTAG215 tags](https://www.amazon.com/gp/product/B08G8KQLLB). You could use a different NFC reader and different tags, but before doing so thoroughly research in the [nfcpy](https://nfcpy.readthedocs.io/en/latest/overview.html#supported-devices) documentation to make sure the devices and tags are compatible. You also may need to make adjustments to my code if you went with a different reader or different tags.
+This guide is for setting up NFC embedded coasters that will play albums and playlists on Spotify when read by a NFC reader. This is written in Python making use of the [nfcpy](https://nfcpy.readthedocs.io/en/latest/) package. In the [nfcpy](https://nfcpy.readthedocs.io/en/latest/) package documentation they require Python version 2.7 or 3.5 or newer. In  my implementation I am using Python version 3.9.6 and running this on a Windows 10 machine. The two minimum items you need to purchase to make use of this project are a NFC reader and NFC tags. The NFC reader I used was the [Sony RC-S380](https://www.amazon.com/gp/product/B00VR1WARC) NFC reader. The NFC tags I used were [NTAG215 tags](https://www.amazon.com/gp/product/B08G8KQLLB). You could use a different NFC reader and different tags, but before doing so thoroughly research in the [nfcpy](https://nfcpy.readthedocs.io/en/latest/overview.html#supported-devices) documentation to make sure the devices and tags are compatible. You may need to make adjustments to my code if you went with a different reader or different tags.
 
 ### Application Setup
 - Open the file [secrets.json](./data/secrets.json) to enter values during this authentication process.
 - Create an application in the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/applications).
 - Copy the application's Client ID and Client Secret and add them to [secrets.json](./data/secrets.json) in their respective fields, **CLIENTID** and **CLIENTSECRET**.
 - Next add a redirect uri to your Spotify application's settings and to [secrets.json](./data/secrets.json).
-    - This redirect uri could be any link. It will only be used for setup. For example you may use: "http://buymeabeer.com/johnprovazek/" or "https://www.google.com/"
+    - The easiest option is to use a local server to automatically process the request sent to the redirect uri. For example you could use "http://localhost:8000". The setup script will handle setting up this local server so you won't need to worry about that, only provide the link. Make sure to follow the format in the example. Use "http" instead of "https" and don't add an extra "/" at the end of the uri. The setup script is equipt to setup a local server on another port if port 8000 is already in use.
+    - If using a local server is not an option with your network you can use any link as the redirect uri. You will just need to manually copy a code from the url during setup. For example you could use "https://johnprovazek.com/spotifycoasters"
     - In the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/applications) under your application select edit settings. Under **Redirect URIs** enter your redirect uri. Click add and then click save.
     - In [secrets.json](./data/secrets.json) enter the same redirect uri under the **REDIRECTURI** field.
-- The next steps are time sensitive so read over them first before executing the scripts.
-    - Run the Python script **user_auth_request.py**, this script will do some setup and open the Spotify User Authentication Request link in your browser. This is so your personal Spotify account is able to interact with your application. When the link opens, login to Spotify if you haven't already. Next hit agree to accept the terms. You will then be redirected to the redirect uri. In the URL bar of your browser there will be a code at the end of the url, copy that code and add it to the **USERSETUPCODE** field in [secrets.json](./data/secrets.json). Save the file.
-    - Run the Python script **token_setup.py**, this will request an access token and refresh token for your application. This is time sensative. Check [secrets.json](./data/secrets.json) to verify the access token and refresh token were added. If your authorization code expired you will need to rerun these scripts and repeat the process.
-- Find the path to your Spotify.exe program. Copy that path and add it to the **EXEPATH** field in [secrets.json](./data/secrets.json). You might need to escape any backslashes to get this to work. Here is my exe path for example:
+- Next find the path to your Spotify.exe program. Copy that path and add it to the **EXEPATH** field in [secrets.json](./data/secrets.json). You will need to use forward slashes or escape any backslashes to get this to work. Here are examples of my executable path:
     ```
+    C:/Users/John/AppData/Roaming/Spotify/Spotify.exe
     C:\\Users\\John\\AppData\\Roaming\\Spotify\\Spotify.exe
     ```
-- Next we will run a script to setup the device you would like Spotify to playback on.
-    - Close out of Spotify on all applications such as desktop, phone, gaming consoles, etc.
-    - Run the Python script **device_setup.py**, this script will test the Spotify executable path you provided earlier. If the executable path is setup correctly and all other Spotify applications were closed it will set your device as the default playback device. This script works by sending a request to Spotify for the list of open devices associated with your account. It will then add the first device in the list of devices to [secrets.json](./data/secrets.json). This script will also output the list of open devices. If the wrong device was setup all you need to change is the **DEVICENAME** and **DEVICEID** fields in [secrets.json](./data/secrets.json) with the correct device name and device id.
+- Your [secrets.json](./data/secrets.json) should look something like this:
+    ```
+    {
+        "CLIENTID": "7cf1c1326s7842ed8e73d4r4bd4da095",
+        "CLIENTSECRET": "6221f71bced947d8b3063b403r49ar20",
+        "REDIRECTURI": "http://localhost:8000",
+        "EXEPATH": "C:/Users/John/AppData/Roaming/Spotify/Spotify.exe",
+        "BASE64IDSECRET": "",
+        "ENCODEDREDIRECTURI": "",
+        "REFRESHTOKEN": "",
+        "DEVICEID": ""
+    }
+    ```
+- Before running the setup script close out of Spotify on all applications such as desktop, phone, gaming consoles, etc. If the executable path is setup correctly and all other Spotify applications were closed it will set your device as the default playback device. If you weren't able to close out of Spotify on all your devices it will be okay. You can set the default playback device manually later. 
+- Run the Python script [setup.py](./scripts/setup.py). This script will do the heavy lifting of setting up your personal Spotify account to interact with your application. The script will open a link to connect your personal Spotify account with your application. When the link opens, login to Spotify if you haven't already. Hit agree to accept the terms. You will then be redirected to the redirect uri. If you chose to use a local server as your redirect uri the rest of the script will automatically run and you won't need to do anything else. You can close out of the redirect website. If you used another link as the redirect uri you will need to copy the code in the address bar of your browser. Copy the whole code after the "=" sign. Enter that code into the script at the prompt. This is time sensative. Once the script is complete look through the output for errors and look through the [secrets.json](./data/secrets.json) to verify all the fields are populated.
+
+### Common Errors
+- If you used a link and not the local server for the redirect uri your access token and refresh token request might have resulted in an error. This is due to the Authorization code expiring. You might have got a response such as **{'error': 'invalid_grant', 'error_description': 'Authorization code expired'}**. If this is the case run the script again and copy the code in the address bar to the script more quickly.
+- If the script is hanging something was likely messed up in the localhost setup. In the terminal first try entering *Ctrl + C*. If the script is still hanging you likely just need to visit the localhost server and that will kill the script. For example if your redirect uri was "http://localhost:8000" visit that site in a browser.
+- If the Spotify.exe path wasn't correct you may get a **the system cannot find the file specified** error. If this is the case you will need to modify your Spotify.exe path.
+
 
 ### NFC Tags and Spotify Setup
 - Next open [nfc_spot.json](./data/nfc_spot.json). This file is a mapping of the NFC tags to the Spotify media we would like to play. Here's an  example of what the [nfc_spot.json](./data/nfc_spot.json) could look like:
@@ -42,7 +59,7 @@ This guide is for setting up NFC embedded coasters that will play albums and pla
     }
     ```
 - The first section is a 14 character code unique to one NFC tag. The second section is the request body sent to the Spotify API [Start/Resume Playback endpoint](https://developer.spotify.com/console/put-play/).
-- This script is also setup for two special NFC tag mappings. You can map NFC tags to either the strings "shuffle" or "sequential". If these NFC tags are read they will enable or disable the shuffle feature on Spotify.
+- This script is also setup for two special NFC tag mappings. You can map NFC tags to either the string "shuffle" or "sequential". If these NFC tags are read they will enable or disable the shuffle feature on Spotify.
 - To gather the codes in your NFC tags first start by plugging in your NFC Reader. Run the Python script **nfc_reader.py**. This is a simple script to read in NFC tags and output the code associated with each tag. Copy the output and add it to [nfc_spot.json](./data/nfc_spot.json).
 - To create the corresponding Spotify section start by opening Spotify. Under playlists, albums, songs, artists, shows, and episodes there will be an ellipses. Click on that ellipses and select share and copy link. In the link there will be a section indicating whether it is a playlist, album, song, artist, show, or episode. Following that there is a 22 character code. You will use that media type and code to form a context_uri. For example when I share the 1992 album Facing Future by Israel Kamakawiwo'ole the Spotify share link will look like: "https://open.spotify.com/album/0pquf1NcG9FdiypBPwICu9?si=jgPtKX9RSxWQi437n3rj7g". When I format that link into a context_uri it will look like "spotify:album:0pquf1NcG9FdiypBPwICu9". You can then add that context_uri to correspond with an NFC tag in [nfc_spot.json](./data/nfc_spot.json). Follow the format in the [nfc_spot.json](./data/nfc_spot.json) example above.
 - If you are like me and are doing this for many albums and playlists I have a Python script **link_uri_conversion.py** to help. First put all the Spotify share links in the file [spotify_links.txt](./data/spotify_links.txt). Then run the script to convert all the links to the context_uri format.
@@ -75,8 +92,7 @@ This guide is for setting up NFC embedded coasters that will play albums and pla
 
 ## Bugs & Features
 
-- Fix script breaking when computer sleeps or usb is unplugged while running in background on startup.
-- Add local server in the setup scripts to make setup easier.
+- Refresh Token may be failing after a long period of time or when Computer sleeps. Invastigate the cause of this. Possibly refresh the access token every time a coaster is read.
 
 ## License
 
