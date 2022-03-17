@@ -20,7 +20,7 @@ class Serv(BaseHTTPRequestHandler):
     def do_GET(self):
         global user_setup_code
         user_setup_code = self.path[7:]
-        self.path = '../web/index.html'
+        self.path = '../index.html'
         try:
             file_to_open = open(self.path).read()
             self.send_response(200)
