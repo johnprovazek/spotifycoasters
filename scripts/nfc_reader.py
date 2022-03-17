@@ -1,5 +1,9 @@
 import nfc # For reading NFC tags
 
+# Usage: This script is used to output the NFC tag code associated
+#        with each tag
+# Example run: "nfc_reader.py"
+
 def nfc_reader_on_tag_connect(tag):
     print(tag.identifier.hex())
     return True

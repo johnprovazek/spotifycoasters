@@ -1,0 +1,1 @@
+CreateObject("Wscript.Shell").Run """C:\Users\John\Documents\spotifycoasters\scripts\spotifycoasters.bat""", 0 , True

@@ -7,6 +7,10 @@ import subprocess # For opening Spotify.exe
 import time # For waiting while Spotify opens
 from http.server import HTTPServer, BaseHTTPRequestHandler # For handling user setup code when using local server redirect uri
 
+# Usage: This script is used to connect your Spotify Application with your personal
+#        Spotify account. It is used to gather all the necessary variables needed.
+# Example run: "python setup.py"
+
 # Local server variables
 httpd = None
 user_setup_code = None

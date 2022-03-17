@@ -5,15 +5,22 @@ import nfc # For reading NFC tags
 import subprocess  # For opening Spotify.exe and checking if it is open
 import re # Using regex to get Spotify medium type from the context_uri
 import time # For refreshing the Spotify API access token every hour and waiting while Spotify opens
+from datetime import datetime # For keeping track of time the access token was issued
 import threading # For spinning up a thread to handle the NFC reader and tokens
 import sys # Using sys to terminate the script upon Ctrl + C
 import os # For setting the current directory when launching script on startup
 
+# Usage: This script is used to read NFC tags from an NFC reader. The script will then
+#        play the spotify media associated with the NFC tag.
+# Example run: "python spotify_coasters.py"
+
 class SpotifyCoasters:
     def __init__(self):
+        print ("Initilizing the Spotify Coasters application")
+        self.access_token = ""
+        self.access_token_date_time = datetime.min
         print ("Loading in secrets")
         self.base_64 = secrets_json["BASE64IDSECRET"]
-        self.access_token = ""
         self.refresh_token = secrets_json["REFRESHTOKEN"]
         self.device_id = secrets_json["DEVICEID"]
 
@@ -34,16 +41,22 @@ class SpotifyCoasters:
             headers={"Content-Type": "application/json",
                 "Authorization": "Bearer {}".format(self.access_token)})
         self.print_context(tag)
-        # print(response)
 
     def refresh_access_token(self):
-        print("Refreshing Spotify token")
-        query = "https://accounts.spotify.com/api/token"
-        response = requests.post(query,
-            data={"grant_type": "refresh_token", "refresh_token": self.refresh_token},
-            headers={"Authorization": "Basic " + self.base_64})
-        response_json = response.json()
-        self.access_token = response_json["access_token"]
+        cur_time = datetime.now()
+        difference = cur_time - self.access_token_date_time
+        if(difference.total_seconds() > 3300):
+            self.access_token_date_time = cur_time
+            if(difference.total_seconds() > 63783116223):
+                print("Refreshing Spotify token")
+            else:
+                print("\nRefreshing Spotify token")
+            query = "https://accounts.spotify.com/api/token"
+            response = requests.post(query,
+                data={"grant_type": "refresh_token", "refresh_token": self.refresh_token},
+                headers={"Authorization": "Basic " + self.base_64})
+            response_json = response.json()
+            self.access_token = response_json["access_token"]
 
     def launch_desktop_spotify(self):
         open_processes = subprocess.check_output('tasklist', shell=True)
@@ -109,6 +122,7 @@ class SpotifyCoasters:
                     "Authorization": "Bearer {}".format(self.access_token)})
 
     def nfc_reader_on_tag_connect(self, tag):
+        self.refresh_access_token()
         print("\nTag Connected: " + tag.identifier.hex())
         if tag.identifier.hex() in nfc_spot_json:
             if nfc_spot_json[tag.identifier.hex()] == "shuffle":
@@ -127,8 +141,9 @@ class SpotifyCoasters:
         print("Tag Disconnected: " + tag.identifier.hex())
 
     def nfc_reader_spin_up(self):
-        print ("NFC Reader starting up in child thread")
+        print ("Connecting usb NFC Reader")
         clf = nfc.ContactlessFrontend('usb')
+        print ("Ready to accept coasters")
         clf.connect(rdwr={'on-release': self.nfc_reader_on_tag_release, 'on-connect': self.nfc_reader_on_tag_connect})
 
     def nfc_run_thread(self):
@@ -137,31 +152,25 @@ class SpotifyCoasters:
         reader_thread.start()
 
 # When launching the script on startup set the full path to your working directory
-# os.chdir("C:\\Users\\John\\Documents\\spotifycoasters")
+# os.chdir("C:/Users/John/Documents/spotifycoasters/scripts")
 
-# Load the NFC tag and Spotify request data json file
-nfc_spot_file = open('./data/nfc_spot.json')
+# Load nfc_spot.json file containing the NFC tag and Spotify request data
+print ("Loading in the nfc_spot.json file")
+nfc_spot_file = open('../john/nfc_spot.json')
 nfc_spot_json = json.load(nfc_spot_file)
 
 # Load the secrets json file
-secrets_file = open('./data/secrets.json')
+print ("Loading in the secrets.json file")
+secrets_file = open('../john/secrets.json')
 secrets_json = json.load(secrets_file)
 
-# Initilize the Spotify Coaster project app
+# Initilize the Spotify Coasters application
 a = SpotifyCoasters()
 
-# Refresh token. This is needed incase coaster is on NFC Reader on startup.
+# Refreshing access token
 a.refresh_access_token()
 
-# Start up the NFC reader loop in own thread
-a.nfc_run_thread()
+# Start up the NFC reader
+a.nfc_reader_spin_up()
 
-# Start refresh token loop that will refresh the access token every hour
-while True:
-    try:
-        a.refresh_access_token()
-        time.sleep(3480)
-    except KeyboardInterrupt:
-        print("\nCtrl + C registered")
-        sys.exit()
 
