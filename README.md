@@ -14,7 +14,7 @@ This guide is for setting up NFC embedded coasters that will play albums and pla
 - Copy the application's Client ID and Client Secret and add them to the [secrets.json](./data/secrets.json) file in their respective fields, **CLIENTID** and **CLIENTSECRET**.
 - Next add a redirect uri to your Spotify application's settings and to the [secrets.json](./data/secrets.json) file.
     - The easiest option is to use a local server to automatically process the request sent to the redirect uri. For example you could use "http://localhost:8000". The setup script will handle setting up this local server so you won't need to worry about that, you only need to provide the link. Make sure to follow the same format as the example. Use "http" instead of "https" and don't add an extra "/" at the end of the uri. The setup script is equipt to setup a local server on another port if port 8000 is already in use.
-    - If using a local server is not an option with your network you can use any link as the redirect uri. You will just need to manually copy a code from the url later during setup. For example you could use "https://johnprovazek.com/spotifycoasters"
+    - If using a local server is not an option with your network you can use any link as the redirect uri. You will just need to manually copy a code from the redirect link later during setup. For example you could use "https://johnprovazek.com/spotifycoasters"
     - Add the redirect uri you selected to your Spotify Application. In the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/applications) under your application select edit settings. Under **Redirect URIs** enter your redirect uri. Click add and then click save.
     - Add the redirect uri you selected to your [secrets.json](./data/secrets.json) file under the **REDIRECTURI** field.
 - Next find the path to your Spotify.exe program. Copy that path and add it to the **EXEPATH** field in the [secrets.json](./data/secrets.json) file. You will need to use forward slashes or escape any backslashes to get this to work. Here are two examples of my executable path correctly formatted:
@@ -40,10 +40,10 @@ This guide is for setting up NFC embedded coasters that will play albums and pla
 - Once the script is complete look through the output for any errors and look through the [secrets.json](./data/secrets.json) file to verify all the fields are populated correctly.
 
 ### Common Errors
-- If you used a link and not the local server for the redirect uri your access token and refresh token request might have resulted in an error. This is due to the Authorization code expiring. You might have got a response such as *{'error': 'invalid_grant', 'error_description': 'Authorization code expired'}*. If this is the case run the script again and this time quickly copy the code in the address bar to the script.
+- If you used a link and not the local server for the redirect uri your access token and refresh token request might have resulted in an error. This is due to the Authorization code expiring. You might have got a response such as *{'error': 'invalid_grant', 'error_description': 'Authorization code expired'}*. If this is the case, run the script again and quickly copy the code in the address bar and enter it in the script.
 - If the script is hanging something was likely messed up in the localhost setup. In the terminal first try entering *Ctrl + C*. If the script is still hanging you likely just need to visit the localhost server and that will kill the script. For example if your redirect uri was "http://localhost:8000" visit that site in a browser.
 - If the Spotify.exe path wasn't correct you may get a *the system cannot find the file specified* error. If this is the case you will need to modify your Spotify.exe path.
-- If you had multiple spotify applications open when you ran [setup.py](./scripts/setup.py), you may have had your **DEVICEID** in the file [secrets.json](./data/secrets.json) incorrectly setup. If this is the case you just need to change the **DEVICEID** field in the file [secrets.json](./data/secrets.json). When [setup.py](./scripts/setup.py) was ran it will have outputted the list of devices connected to your personal Spotify account. Use that list of devices to determine the correct **DEVICEID** to put in the file [secrets.json](./data/secrets.json)
+- If you had multiple Spotify applications open when you ran [setup.py](./scripts/setup.py), you may have an incorrect **DEVICEID** in the file [secrets.json](./data/secrets.json). If this is the case you just need to change the **DEVICEID** field in the file [secrets.json](./data/secrets.json). When [setup.py](./scripts/setup.py) was ran it will have outputted the list of devices connected to your personal Spotify account. Use that list of devices to determine the correct **DEVICEID** to put in the file [secrets.json](./data/secrets.json)
 
 ### NFC Tags and Spotify Setup
 - Next open [nfc_spot.json](./data/nfc_spot.json). This file is a mapping of the NFC tags to the Spotify media we would like to play. Here's an  example of what the [nfc_spot.json](./data/nfc_spot.json) could look like:
@@ -73,7 +73,7 @@ This guide is for setting up NFC embedded coasters that will play albums and pla
 
 
 ## Usage
-- To test this out and verify everything is working correctly run the script [spotify_coasters.py](./scripts/spotify_coasters.py). Your NFC tags should now play the corresponding Spotify section in the [nfc_spot.json](./data/nfc_spot.json) file.
+- To test this out and verify everything is working correctly run the script [spotify_coasters.py](./scripts/spotify_coasters.py). When your NFC tags are read they should now play the corresponding Spotify section in the [nfc_spot.json](./data/nfc_spot.json) file.
 - If you are on a Windows machine, follow these steps to get this to script to run in the background on startup:
     - In [spotify_coasters.py](./scripts/spotify_coasters.py) there should be a line of code commented out running the function os.chdir. Uncomment that function and enter in the complete path to the directory of this script. You may need to escape backslashes in your path.
     - In [spotify_coasters.bat](./scripts/spotify_coasters.bat) replace the path with the complete path to the [spotify_coasters.py](./scripts/spotify_coasters.py) file.
@@ -85,7 +85,9 @@ This guide is for setting up NFC embedded coasters that will play albums and pla
 
 ## Credits
 
-[Spotify API](https://developer.spotify.com/console/) was primarily used in this project.
+[Spotify API](https://developer.spotify.com/console/) was used to interact with Spotify.
+
+[nfcpy](https://nfcpy.readthedocs.io/en/latest/) was used for reading the NFC tags.
 
 [Automate Spotify with Python (Spotify API) - Euan Morgan](https://www.youtube.com/watch?v=-FsFT6OwE1A&t=450s&ab_channel=EuanMorgan) was extremely helpful in understanding the Spotify API.
 
@@ -95,7 +97,7 @@ This guide is for setting up NFC embedded coasters that will play albums and pla
 
 ## Bugs & Improvements
 
-- Script will terminate when the NFC reader is unplugged.
+- Script terminates when the NFC reader is unplugged. 
 
 ## License
 
