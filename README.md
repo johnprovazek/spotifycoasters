@@ -14,15 +14,15 @@ This guide is for setting up NFC embedded coasters that will play albums and pla
 - Copy the application's Client ID and Client Secret and add them to the [secrets.json](./data/secrets.json) file in their respective fields, **CLIENTID** and **CLIENTSECRET**.
 - Next add a redirect uri to your Spotify application's settings and to the [secrets.json](./data/secrets.json) file.
     - The easiest option is to use a local server to automatically process the request sent to the redirect uri. For example you could use "http://localhost:8000". The setup script will handle setting up this local server so you won't need to worry about that, you only need to provide the link. Make sure to follow the same format as the example. Use "http" instead of "https" and don't add an extra "/" at the end of the uri. The setup script is equipt to setup a local server on another port if port 8000 is already in use.
-    - If using a local server is not an option with your network you can use any link as the redirect uri. You will just need to manually copy a code from the redirect link later during setup. For example you could use "https://johnprovazek.com/spotifycoasters"
+    - If using a local server is not an option with your network you can use any link as the redirect uri. You will just need to manually copy a code from the redirect link and enter it into a script prompt during setup. For example you could use "https://johnprovazek.com/spotifycoasters"
     - Add the redirect uri you selected to your Spotify Application. In the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/applications) under your application select edit settings. Under **Redirect URIs** enter your redirect uri. Click add and then click save.
     - Add the redirect uri you selected to your [secrets.json](./data/secrets.json) file under the **REDIRECTURI** field.
-- Next find the path to your Spotify.exe program. Copy that path and add it to the **EXEPATH** field in the [secrets.json](./data/secrets.json) file. You will need to use forward slashes or escape any backslashes to get this to work. Here are two examples of my executable path correctly formatted:
+- Next find the path to your Spotify.exe program. Copy that path and add it to the **EXEPATH** field in the [secrets.json](./data/secrets.json) file. You will need to use forward slashes or escape any backslashes to get this to work. Here are two examples of my executable path that are correctly formatted:
     ```
     C:/Users/John/AppData/Roaming/Spotify/Spotify.exe
     C:\\Users\\John\\AppData\\Roaming\\Spotify\\Spotify.exe
     ```
-- Your [secrets.json](./data/secrets.json) should now look something like this:
+- Your [secrets.json](./data/secrets.json) file should now look something like this:
     ```
     {
         "CLIENTID": "7cf1c1326s7842ed8e73d4r4bd4da095",
@@ -36,7 +36,7 @@ This guide is for setting up NFC embedded coasters that will play albums and pla
     }
     ```
 - Before running the setup script close out of Spotify on all applications such as desktop, phone, gaming consoles, etc. If the executable path is setup correctly and all other Spotify applications were closed it will set your device as the default playback device. If you weren't able to close out of Spotify on all your devices you will be able to set the default playback device manually later. 
-- Run the script [setup.py](./scripts/setup.py). This script will do the heavy lifting of setting up your personal Spotify account to interact with your Spotify application. Shortly after running the script an Authentication link will open in your browser. When the link opens, login to Spotify if you haven't already. Hit agree to accept the terms. You will then be redirected to the redirect uri. If you used a local server as your redirect uri the rest of the script will automatically run and you won't need to do anything else. You can close out of the redirect website. If you used another link as the redirect uri you will need to copy the code in the address bar of your browser. Copy the whole code after the "=" sign. Enter that code into the script at the prompt.
+- Run the script [setup.py](./scripts/setup.py). This script will do the heavy lifting of setting up your personal Spotify account to interact with your Spotify application. Shortly after running the script an authentication link will open in your browser. When the link opens, login to Spotify if you haven't already. Hit agree to accept the terms. You will then be redirected to the redirect uri. If you used a local server as your redirect uri the rest of the script will run to completion and will not need any input. You can close out of the redirect website. If you used another link as the redirect uri you will need to copy the code in the address bar of your browser. Copy the whole code after the "=" sign. Enter that code into the script at the prompt.
 - Once the script is complete look through the output for any errors and look through the [secrets.json](./data/secrets.json) file to verify all the fields are populated correctly.
 
 ### Common Errors
@@ -64,7 +64,7 @@ This guide is for setting up NFC embedded coasters that will play albums and pla
 - To gather the codes in your NFC tags first start by plugging in your NFC Reader. Run the script [nfc_reader.py](./scripts/nfc_reader.py). This is a simple script to read in NFC tags and output the code associated with each tag. Copy the output codes and add them to the [nfc_spot.json](./data/nfc_spot.json) file. Keep the format consistant with the example above.
 - To create the corresponding Spotify section start by opening Spotify. Under playlists, albums, songs, artists, shows, and episodes there will be an ellipses. Click on that ellipses and select share and copy link. In the link there will be a section indicating whether it is a playlist, album, song, artist, show, or episode. Following that there is a 22 character code. You will use that media type and code to form a context_uri. For example when sharing the 1992 album Facing Future by Israel Kamakawiwo'ole the Spotify share link will look like: "https://open.spotify.com/album/0pquf1NcG9FdiypBPwICu9?si=jgPtKX9RSxWQi437n3rj7g". When formatting that link into a context_uri it will look like "spotify:album:0pquf1NcG9FdiypBPwICu9". You can then add that context_uri to correspond with an NFC tag in the [nfc_spot.json](./data/nfc_spot.json) file. Keep the format consistant with the example above.
 - If you are doing this for many albums and playlists you may want to use the script [link_uri_conversion.py](./scripts/link_uri_conversion.py) to help. First put all the Spotify share links into a file. Then run the script [link_uri_conversion.py](./scripts/link_uri_conversion.py) with the file path as the first argument. This will convert all the Spotify share links and output them in the context_uri format.
-- The Spotify API [Start/Resume Playback endpoint](https://developer.spotify.com/console/put-play/) appears to only be able to play albums, playlists, shows, and artists. If you want to play an individual song you will need to play it from an album or playlist. If you want to play a specific podcast episode you will need to do that from a show. There is an offset field to help with that. Check the example [nfc_spot.json](./data/nfc_spot.json) above to see some offset examples. It is worth noting that the offset position is indexed at 0.
+- The Spotify API [Start/Resume Playback endpoint](https://developer.spotify.com/console/put-play/) appears to only be able to play albums, playlists, shows, and artists. If you want to play an individual song you will need to play it from an album or playlist. If you want to play a specific podcast episode you will need to do that from a show. There is an offset field to help with that. Check the example [nfc_spot.json](./data/nfc_spot.json) above to see some offset examples. It is worth noting that the offset position is indexed at 0. So if you wanted to play the 5th track of an album you would need to put 4 as the offset position.
 
 ### Coaster Setup
 - If you decided to use coasters for this project here is the [youtube](https://www.youtube.com/watch?v=RV7-3CawKAM&t=68s&ab_channel=DIYPETE) tutorial I followed.
@@ -98,7 +98,3 @@ This guide is for setting up NFC embedded coasters that will play albums and pla
 ## Bugs & Improvements
 
 - Script terminates when the NFC reader is unplugged. 
-
-## License
-
-No License for now until I have a better understanding of this. Would like this to be free for non commercial use.
