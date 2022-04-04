@@ -1,7 +1,7 @@
 # spotifycoasters
 
 ## Description
-This project started off completely different. This idea came about because I have a large collection of CD's. I keep most of them in my car which means I have a big box of CD cases taking up space at home. The original idea was to mount these CD cases on a wall and when they were pressed a switch behind them would be activated and the album would be played. At the same time, I wanted to do something similar with my Spotify playlists. I wanted to build custom cartridges, that when read, would play my Spotify playlists. At the time, I was also looking to buy some coasters. I decided this would be a great project to combine all three of these ideas. I decided to make NFC embedded coasters that when read by a NFC reader would play my favorite albums and playlists on Spotify!
+The initial idea for this project first came about because I have a large collection of CD's. I keep most of them in my car which means I have a big box of CD cases taking up space at home. The original idea was to mount these CD cases on a wall and when they were pressed a switch behind them would be activated and the album would be played. At the same time, I wanted to do something similar with my Spotify playlists. I wanted to build custom cartridges, that when read, would play my Spotify playlists. At the time, I was also looking to buy some coasters. I decided this would be a great project to combine all three of these ideas. I decided to make NFC embedded coasters that when read by a NFC reader would play my favorite albums and playlists on Spotify!
 
 Built using Python utilizing the Spotify API.
 
@@ -15,9 +15,9 @@ This guide is for setting up NFC embedded coasters that will play albums and pla
 - Next add a redirect uri to your Spotify application's settings and to the [secrets.json](./data/secrets.json) file.
     - The easiest option is to use a local server to automatically process the request sent to the redirect uri. For example you could use "http://localhost:8000". The setup script will handle setting up this local server so you won't need to worry about that, you only need to provide the link. Make sure to follow the same format as the example. Use "http" instead of "https" and don't add an extra "/" at the end of the uri. The setup script is equipt to setup a local server on another port if port 8000 is already in use.
     - If using a local server is not an option with your network you can use any link as the redirect uri. You will just need to manually copy a code from the redirect link and enter it into a script prompt during setup. For example you could use "https://johnprovazek.com/spotifycoasters"
-    - Add the redirect uri you selected to your Spotify Application. In the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/applications) under your application select edit settings. Under **Redirect URIs** enter your redirect uri. Click add and then click save.
+    - Add the redirect uri you selected to your Spotify Application. In the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/applications) under your application select edit settings. In settings, under **Redirect URIs** enter your redirect uri. Click add and then click save.
     - Add the redirect uri you selected to your [secrets.json](./data/secrets.json) file under the **REDIRECTURI** field.
-- Next find the path to your Spotify.exe program. Copy that path and add it to the **EXEPATH** field in the [secrets.json](./data/secrets.json) file. You will need to use forward slashes or escape any backslashes to get this to work. Here are two examples of my executable path that are correctly formatted:
+- Next find the path to your Spotify.exe program. Copy that path and add it to the **EXEPATH** field in the [secrets.json](./data/secrets.json) file. You may need to use forward slashes or need to escape any backslashes to get this to work. Here are two examples of my executable path that are correctly formatted:
     ```
     C:/Users/John/AppData/Roaming/Spotify/Spotify.exe
     C:\\Users\\John\\AppData\\Roaming\\Spotify\\Spotify.exe
@@ -40,13 +40,13 @@ This guide is for setting up NFC embedded coasters that will play albums and pla
 - Once the script is complete look through the output for any errors and look through the [secrets.json](./data/secrets.json) file to verify all the fields are populated correctly.
 
 ### Common Errors
-- If you used a link and not the local server for the redirect uri your access token and refresh token request might have resulted in an error. This is due to the Authorization code expiring. You might have got a response such as *{'error': 'invalid_grant', 'error_description': 'Authorization code expired'}*. If this is the case, run the script again and quickly copy the code in the address bar and enter it in the script.
+- If you used a link and not the local server for the redirect uri your access token and refresh token request might have resulted in a timeout error due to the Authorization code expiring. You might have got a response such as *{'error': 'invalid_grant', 'error_description': 'Authorization code expired'}*. If this is the case, run the script again and quickly copy the code in the address bar and enter it in the script at the prompt.
 - If the script is hanging something was likely messed up in the localhost setup. In the terminal first try entering *Ctrl + C*. If the script is still hanging you likely just need to visit the localhost server and that will kill the script. For example if your redirect uri was "http://localhost:8000" visit that site in a browser.
 - If the Spotify.exe path wasn't correct you may get a *the system cannot find the file specified* error. If this is the case you will need to modify your Spotify.exe path.
 - If you had multiple Spotify applications open when you ran [setup.py](./scripts/setup.py), you may have an incorrect **DEVICEID** in the file [secrets.json](./data/secrets.json). If this is the case you just need to change the **DEVICEID** field in the file [secrets.json](./data/secrets.json). When [setup.py](./scripts/setup.py) was ran it will have outputted the list of devices connected to your personal Spotify account. Use that list of devices to determine the correct **DEVICEID** to put in the file [secrets.json](./data/secrets.json)
 
 ### NFC Tags and Spotify Setup
-- Next open [nfc_spot.json](./data/nfc_spot.json). This file is a mapping of the NFC tags to the Spotify media we would like to play. Here's an  example of what the [nfc_spot.json](./data/nfc_spot.json) could look like:
+- Next open [nfc_spot.json](./data/nfc_spot.json). This file is a mapping of the NFC tags to the Spotify media you would like to play. Here's an  example of what the [nfc_spot.json](./data/nfc_spot.json) could look like:
     ```
     {
         "0415914a403916": { "context_uri": "spotify:album:0pquf1NcG9FdiypBPwICu9"},
@@ -69,7 +69,7 @@ This guide is for setting up NFC embedded coasters that will play albums and pla
 ### Coaster Setup
 - If you decided to use coasters for this project here is the [youtube](https://www.youtube.com/watch?v=RV7-3CawKAM&t=68s&ab_channel=DIYPETE) tutorial I followed.
 - In his tutorial he used felt pads on the bottom, I opted for a [cork backing](https://www.amazon.com/gp/product/B0834MWWS8/). There is probably a better way to do this, but I used an X-Acto knife to cut away a small cavity for the NFC tag to sit. I then hot glued the cork backing to the coaster such that you couldn't see the NFC tag.
-- I printed out my album covers and playlist covers on 4x6 prints then cut them out and put them on the coaster. I included a script [convert_album_cover.py](./scripts/convert_album_cover.py) to help convert square images to fit in 4x6 prints. This is assuming you are using 4 inch tiles. To use this script, first crop all your images so they are exact squares then put all the images in a directory. Run the script [convert_album_cover.py](./scripts/convert_album_cover.py) with the first argument as your source directory and the second argument as your destination directory. The script will put convert all the images to the 4x6 format and place them in the destination directory.
+- I printed out my album covers and playlist covers on 4x6 prints then cut them out and put them on the 4 inch tile coaster. I included a script [convert_album_cover.py](./scripts/convert_album_cover.py) to help convert square images to fit in 4x6 prints. This is assuming you are using 4 inch tiles. To use this script, first crop all your images so they are exact squares then put all the images in a directory. Run the script [convert_album_cover.py](./scripts/convert_album_cover.py) with the first argument as your source directory and the second argument as your destination directory. The script will convert all the images to the 4x6 format and place them in the destination directory.
 
 
 ## Usage
