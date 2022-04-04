@@ -1,7 +1,7 @@
 # spotifycoasters
 
 ## Description
-This project was originally conceived as a much different idea. This idea came about because I have a large collection of CD's. I keep most of them in my car which means I have a big box of CD cases taking up space at home. The original idea was to mount these CD cases on a wall. When the CD's were pressed a switch behind them would be activated and the album would be played. At the same time I also wanted to do something similar with my Spotify playlists. I wanted to build custom cartridges that when read would play my Spotify playlists. At the time, I was also looking to buy some coasters. I decided this would be a great project to combine all of these ideas. I decided to make NFC embedded coasters that when read by a NFC reader would play my favorite albums and playlists on Spotify!
+This project started off completely different. This idea came about because I have a large collection of CD's. I keep most of them in my car which means I have a big box of CD cases taking up space at home. The original idea was to mount these CD cases on a wall and when they were pressed a switch behind them would be activated and the album would be played. At the same time, I wanted to do something similar with my Spotify playlists. I wanted to build custom cartridges, that when read, would play my Spotify playlists. At the time, I was also looking to buy some coasters. I decided this would be a great project to combine all three of these ideas. I decided to make NFC embedded coasters that when read by a NFC reader would play my favorite albums and playlists on Spotify!
 
 Built using Python utilizing the Spotify API.
 
