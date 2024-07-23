@@ -1,15 +1,17 @@
-import sys # Used to handle command line arguments
+"""link_uri_conversion.py converts a text file of Spotify share links to Spotify URIs. """
 
-# Usage: This script is used to take in a text file containing spotify share links 
-#        and output the corresponding spotify uri. Use these spotify uris in your
-#        nfc_spot.json file.
-# Example run: "python link_uri_conversion.py ../links.txt"
+# This script takes in a text file containing Spotify share links and outputs the corresponding spotify URIs.
+#
+# Example: [python link_uri_conversion.py ../links.txt]
 
-# Command line arguments
+import sys  # Used to handle command line arguments.
+
+
+# Command line arguments.
 links = sys.argv[1]
 
-# Coverting share links to uri
-with open(links) as spotify_links:
+# Converting Spotify share links to URIs.
+with open(links, encoding="utf-8") as spotify_links:
     for link in spotify_links:
         link_split = link[25:].split("/")
         formatted_uri = "spotify:" + link_split[0] + ":" + link_split[1][0:22]

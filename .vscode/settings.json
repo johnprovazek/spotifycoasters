@@ -1,0 +1,38 @@
+{
+  "pylint.args": ["--rcfile=.vscode/.pylintrc"],
+  "search.exclude": {
+    "local-dev/": true
+  },
+  "cSpell.words": [
+    "Abdw",
+    "Acto",
+    "bced",
+    "CEQQH",
+    "chdir",
+    "CLIENTID",
+    "CLIENTSECRET",
+    "DEVICEID",
+    "ENCODEDREDIRECTURI",
+    "Euan",
+    "EXEPATH",
+    "Fdiyp",
+    "Fmjnr",
+    "IDSECRET",
+    "johnp",
+    "Kamakawiwo'ole",
+    "nfcpy",
+    "NTAG",
+    "podge",
+    "pquf",
+    "pywin",
+    "rdwr",
+    "REDIRECTURI",
+    "REFRESHTOKEN",
+    "Serv",
+    "spotifycoasters",
+    "tasklist",
+    "Tokv",
+    "ugsyc",
+    "ZYEAB"
+  ]
+}
