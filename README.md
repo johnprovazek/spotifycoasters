@@ -4,7 +4,13 @@
 
 This project implements NFC embedded drink coasters that when read by an NFC reader will play corresponding albums and playlists on Spotify.
 
-Built using Python utilizing the Spotify API.
+Built using Python utilizing the Spotify API and nfcpy package.
+
+<div align="center">
+  <picture>
+    <img src="https://github.com/user-attachments/assets/14458734-a6fe-4503-8b5b-25c0bacdbe09" width="830px">
+  </picture>
+</div>
 
 ## Installation
 
