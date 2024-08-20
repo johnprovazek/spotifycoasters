@@ -8,7 +8,7 @@ Built using Python utilizing the Spotify API and nfcpy package.
 
 <div align="center">
   <picture>
-    <img src="https://github.com/user-attachments/assets/14458734-a6fe-4503-8b5b-25c0bacdbe09" width="830px">
+    <img src="https://repository-images.githubusercontent.com/456036188/aff81a3b-45ff-4d1b-aee3-22bc048f4ad7" width="830px">
   </picture>
 </div>
 
